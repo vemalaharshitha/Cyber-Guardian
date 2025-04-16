@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuardian | Secure Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6e44ff;
+            --secondary: #00f0ff;
+            --accent: #ff44ec;
+            --dark: #0f1621;
+            --light: #e0e0e0;
+            --success: #4dff7a;
+            --danger: #ff4d4d;
+            --card-bg: rgba(15, 22, 33, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(110, 68, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 240, 255, 0.15) 0%, transparent 50%),
+                url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 22, 33, 0.9) 0%, rgba(15, 22, 33, 0.95) 100%);
+            z-index: 0;
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem;
+            perspective: 1000px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(110, 68, 255, 0.1),
+                0 0 60px rgba(0, 240, 255, 0.05);
+            padding: 2.5rem;
+            text-align: center;
+            transform-style: preserve-3d;
+            animation: fadeIn 0.8s ease, float 6s ease-in-out infinite;
+            transition: all 0.5s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px) rotateX(1deg) rotateY(1deg);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(110, 68, 255, 0.15),
+                0 0 80px rgba(0, 240, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            transform-style: preserve-3d;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 
+                0 5px 15px rgba(110, 68, 255, 0.4),
+                0 0 20px rgba(255, 68, 236, 0.3);
+            transform: translateZ(20px);
+            transition: all 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: translateZ(20px) rotateY(180deg);
+        }
+
+        .logo-icon i {
+            font-size: 28px;
+            color: rgb(27, 57, 155);
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(110, 68, 255, 0.3);
+            transform: translateZ(10px);
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            transform: translateZ(10px);
+        }
+
+        .cyber-quote {
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            padding: 0 1rem;
+            transform: translateZ(10px);
+        }
+
+        .cyber-quote::before,
+        .cyber-quote::after {
+            content: '"';
+            color: var(--secondary);
+            font-size: 1.5rem;
+            position: absolute;
+            opacity: 0.7;
+        }
+
+        .cyber-quote::before {
+            left: -5px;
+            top: -10px;
+        }
+
+        .cyber-quote::after {
+            right: -5px;
+            bottom: -20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            transform: translateZ(10px);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--light);
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px 14px 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 
+                0 0 0 3px rgba(110, 68, 255, 0.2),
+                0 0 20px rgba(110, 68, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        input:focus + i {
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(10px);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 
+                0 5px 15px rgba(110, 68, 255, 0.4),
+                0 0 20px rgba(255, 68, 236, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) translateZ(10px);
+            box-shadow: 
+                0 8px 25px rgba(110, 68, 255, 0.5),
+                0 0 30px rgba(255, 68, 236, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px) translateZ(10px);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary i {
+            margin-left: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(5px);
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            transform: translateZ(10px);
+        }
+
+        .forgot-password:hover {
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.5);
+            transform: translateZ(10px);
+        }
+
+        .login-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Advanced features */
+        .security-indicator {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .security-indicator::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: var(--danger);
+            transition: width 0.3s ease;
+        }
+
+        input:focus ~ .security-indicator::after {
+            width: 33%;
+        }
+
+        input[value]:not([value=""]) ~ .security-indicator::after {
+            width: 66%;
+            background: var(--secondary);
+        }
+
+        input:valid ~ .security-indicator::after {
+            width: 100%;
+            background: var(--success);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1rem;
+            }
+            
+            .login-card {
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+            
+            .logo {
+                margin-bottom: 1.5rem;
+            }
+            
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+        }
+
+        /* Particle animation */
+        @keyframes particle-float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">CyberGuardian</div>
+            </div>
+            
+            <h1>Secure Authentication Portal</h1>
+            
+            <p class="cyber-quote">The only secure system is one that's powered off, cast in a block of concrete, and sealed in a lead-lined room with armed guards</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <div class="security-indicator"></div>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <span class="btn-text">Access Secure Dashboard</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                New to CyberGuardian? <a href="#">Request access</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Button loading animation
+            const btn = document.querySelector('.btn-primary');
+            const btnText = btn.querySelector('.btn-text');
+            const originalText = btnText.textContent;
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+            
+            // Add cyber security verification animation
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-fingerprint"></i> Verifying identity...';
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-shield-check"></i> Authenticating...';
+                    
+                    setTimeout(() => {
+                        // Store credentials in session (for demo purposes only)
+                        sessionStorage.setItem('authenticated', 'true');
+                        sessionStorage.setItem('username', username);
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'index.html';
+                    }, 800);
+                }, 800);
+            }, 800);
+        });
+
+        // Password visibility toggle with animation
+        const passwordInput = document.getElementById('password');
+        const passwordIcon = document.querySelector('.input-group i.fa-lock');
+        
+        passwordIcon.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-lock');
+                passwordIcon.classList.add('fa-unlock');
+                passwordIcon.style.color = getComputedStyle(document.documentElement).getPropertyValue('--secondary');
+                passwordIcon.style.textShadow = '0 0 10px rgba(0, 240, 255, 0.5)';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-unlock');
+                passwordIcon.classList.add('fa-lock');
+                passwordIcon.style.color = 'rgba(255, 255, 255, 0.7)';
+                passwordIcon.style.textShadow = 'none';
+            }
+        });
+
+        // Particle animation
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 4 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = i % 2 === 0 ? 'rgba(110, 68, 255, 0.5)' : 'rgba(0, 240, 255, 0.5)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = '100vh';
+                particle.style.opacity = '0';
+                particle.style.animation = `particle-float ${Math.random() * 10 + 10}s linear infinite`;
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Add focus/blur effects to inputs
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('i').style.color = getComputedStyle(document.documentElement).getPropertyValue('--secondary');
+                this.parentElement.querySelector('i').style.textShadow = '0 0 10px rgba(0, 240, 255, 0.5)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('i').style.color = 'rgba(255, 255, 255, 0.7)';
+                this.parentElement.querySelector('i').style.textShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
